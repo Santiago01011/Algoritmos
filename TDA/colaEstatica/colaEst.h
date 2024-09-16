@@ -6,6 +6,7 @@
 #include <string.h>
 
 #define TAM_COLA 300
+#define MINIMO(a,b) ((a) < (b) ? (a) : (b))
 
 typedef struct {
     char cola[TAM_COLA];
@@ -21,4 +22,5 @@ int verPrimeroCola(const tCola *p, void *d, unsigned cantBytes);
 int colaVacia(const tCola *p);
 int sacarDeCola(tCola *p, void *d, unsigned cantBytes);
 void vaciarCola(tCola *p);
+
 #endif
