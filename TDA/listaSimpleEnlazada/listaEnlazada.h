@@ -25,4 +25,5 @@ int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes);
 int sacarUltimoLista(tLista *p, void *d, unsigned cantBytes);
 int verUltimoLista(const tLista *p, void *d, unsigned cantBytes);
 int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const void *, const void *));
+//void recorrerLista(tLista *p, void (*accion)(void *), );
 #endif
