@@ -25,8 +25,11 @@ int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes);
 int sacarUltimoLista(tLista *p, void *d, unsigned cantBytes);
 int verUltimoLista(const tLista *p, void *d, unsigned cantBytes);
 int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const void *, const void *));
-int ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *));
+void ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *));
 void map(tLista *p, void accion(void*, void*), void *param);
 void filter(tLista *p, int condicion(const void*, void*), void *param);
 void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void *param);
+
+//ejercicio podio
+void insertarEnPodio(tLista *p, int (*cmp)(const void *, const void *));
 #endif

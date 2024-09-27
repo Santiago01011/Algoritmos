@@ -166,21 +166,45 @@ void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void 
 // y cuando quiero insertar otro debo comparar para saber si entra y eliminar el
 //�ltimo en caso de que entre.
 
-//Ejercicio Podio agregar a la lista los 3 primeros elementos de la lista, si hay mas de un top 1, 
+//Ejercicio Podio agregar a una lista los 3 primeros elementos de la lista, si hay mas de un top 1, 
 //se va descontando los lugres del podio, lo mismo con los top 2, top 3 cantidad de elementos iguales
 //ejercicio podio: puedo tener muchos primeros, segundos y terceros si est�n empatados
 //si tengo dos primeros, no hay segundo.
 //si tengo tres primeros, no hay segundo ni tercero.
 //voy contabilizando los primeros y segundos.
 
-int insertarEnPodio(tLista *p, int (*cmp)(const void *, const void *), const void *dato){
-    int pri = 0, seg = 0;
+void insertarEnPodio(tLista *p, int (*cmp)(const void *, const void *)){ //*p es una lista ordenada
+    int pri = 0, seg = 0 , ter = 0;
     tLista podio;
     crearLista(&podio);
-    while(*p){
+    tNodo *auxPod , *auxN;
 
-
+    while(*p && (pri + seg + ter) < 3){
+        
+        if(pri + seg + ter < 3){
+            if(pri == 0 || cmp((*p)->info, podio->info) == 0){
+                ponerAlFinal(&podio, (*p)->info, (*p)->tamInfo);
+                auxN = *p;
+                *p = auxN->sig;
+                pri++;
+            }
+            else if(seg == 0 || cmp((*p)->info, podio->info) == 0){ //cmp devuelve 1 si el primero es mayor
+                ponerAlFinal(&podio, (*p)->info, (*p)->tamInfo);
+                auxN = *p;
+                *p = auxN->sig;
+                seg++;            
+            }
+            else if(cmp((*p)->info, podio->info) == 0){
+                ponerAlFinal(&podio, (*p)->info, (*p)->tamInfo);
+                auxN = *p;
+                *p = auxN->sig;                
+            }
+        }
+        printf("pri: %d, seg: %d, ter: %d\n", pri, seg, ter);
+        getchar();
     }
-
-    
-}
+    puts("Podio:");
+    for(tNodo *i = podio; i; i = i->sig){
+        printf("%d\n", *(int *)i->info);
+    }
+} 
