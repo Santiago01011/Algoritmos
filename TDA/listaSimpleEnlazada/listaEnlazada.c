@@ -2,6 +2,8 @@
 
 #define minimo(x, y) ((x) <= (y) ? (x) : (y))
 
+
+
 void crearLista(tLista *p){
     *p = NULL;
 }
@@ -114,3 +116,71 @@ int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const 
     return 1;
 }
 
+void ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *)){
+    tLista listaOrdenada;
+    crearLista(&listaOrdenada);
+    while(*p){
+        tNodo *aux = *p;
+        *p = aux->sig;
+        aux->sig = NULL;
+        tNodo **q = &listaOrdenada;
+        while(*q && cmp((*q)->info, aux->info) < 0)
+            q = &(*q)->sig;
+        aux->sig = *q;
+        *q = aux;
+    }
+    *p = listaOrdenada;
+}
+
+void map(tLista *p, void accion(void*, void*), void *param){
+    while(*p){
+        accion((*p)->info, param);
+        p = &(*p)->sig;
+    }
+}
+
+void filter(tLista *p, int condicion(const void*, void*), void *param){
+    tNodo *aux;
+    while(*p){
+        if(!condicion((*p)->info, param)){ //si condicion devuelve 0, elimino el nodo. Si devuelve 1, avanzo.
+            aux = *p;
+            *p = aux->sig;
+            free(aux->info);
+            free(aux);
+        }else{
+            p = &(*p)->sig;
+        }
+    }
+}
+
+void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void *param){
+    while(*p){
+        accion((*p)->info, res, param);
+        p = &(*p)->sig;
+    }
+    return res;
+}
+
+
+//ejercicio insertar top 10: los primeros 10 entran directo y de forma ordenada,
+// y cuando quiero insertar otro debo comparar para saber si entra y eliminar el
+//�ltimo en caso de que entre.
+
+//Ejercicio Podio agregar a la lista los 3 primeros elementos de la lista, si hay mas de un top 1, 
+//se va descontando los lugres del podio, lo mismo con los top 2, top 3 cantidad de elementos iguales
+//ejercicio podio: puedo tener muchos primeros, segundos y terceros si est�n empatados
+//si tengo dos primeros, no hay segundo.
+//si tengo tres primeros, no hay segundo ni tercero.
+//voy contabilizando los primeros y segundos.
+
+int insertarEnPodio(tLista *p, int (*cmp)(const void *, const void *), const void *dato){
+    int pri = 0, seg = 0;
+    tLista podio;
+    crearLista(&podio);
+    while(*p){
+
+
+    }
+
+    
+}

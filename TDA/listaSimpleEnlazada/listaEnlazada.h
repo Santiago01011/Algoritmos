@@ -13,7 +13,7 @@ typedef struct sNodo{
 
 typedef tNodo *tLista;
 
-
+//prototipos
 void crearLista(tLista *p);
 int listaVacia(const tLista *p);
 int listaLlena(const tLista *p, unsigned cantBytes);
@@ -25,5 +25,8 @@ int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes);
 int sacarUltimoLista(tLista *p, void *d, unsigned cantBytes);
 int verUltimoLista(const tLista *p, void *d, unsigned cantBytes);
 int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const void *, const void *));
-//void recorrerLista(tLista *p, void (*accion)(void *), );
+int ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *));
+void map(tLista *p, void accion(void*, void*), void *param);
+void filter(tLista *p, int condicion(const void*, void*), void *param);
+void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void *param);
 #endif
