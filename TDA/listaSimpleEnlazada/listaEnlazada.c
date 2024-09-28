@@ -45,7 +45,6 @@ int ponerAlComienzo(tLista *p, const void *d, unsigned cantBytes){
 
 int sacarPrimeroLista(tLista *p, void *d, unsigned cantBytes){
     tNodo *aux = *p;
-
     if(aux == NULL)
         return 0;
     *p = aux->sig;
@@ -66,8 +65,7 @@ int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes){
     tNodo *nue;
     while(*p)
         p = &(*p)->sig;
-    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL ||
-    (nue->info = malloc(cantBytes)) == NULL){
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL ||(nue->info = malloc(cantBytes)) == NULL){
         free(nue);
         return 0;
     }
@@ -173,38 +171,40 @@ void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void 
 //si tengo tres primeros, no hay segundo ni tercero.
 //voy contabilizando los primeros y segundos.
 
-void insertarEnPodio(tLista *p, int (*cmp)(const void *, const void *)){ //*p es una lista ordenada
-    int pri = 0, seg = 0 , ter = 0;
-    tLista podio;
-    crearLista(&podio);
-    tNodo *auxPod , *auxN;
-
-    while(*p && (pri + seg + ter) < 3){
-        
-        if(pri + seg + ter < 3){
-            if(pri == 0 || cmp((*p)->info, podio->info) == 0){
-                ponerAlFinal(&podio, (*p)->info, (*p)->tamInfo);
-                auxN = *p;
-                *p = auxN->sig;
-                pri++;
-            }
-            else if(seg == 0 || cmp((*p)->info, podio->info) == 0){ //cmp devuelve 1 si el primero es mayor
-                ponerAlFinal(&podio, (*p)->info, (*p)->tamInfo);
-                auxN = *p;
-                *p = auxN->sig;
-                seg++;            
-            }
-            else if(cmp((*p)->info, podio->info) == 0){
-                ponerAlFinal(&podio, (*p)->info, (*p)->tamInfo);
-                auxN = *p;
-                *p = auxN->sig;                
+void insertarEnPodio(tLista *podio, tLista *p, int (*cmp)(const void *, const void *)){ //*p es una lista ordenada
+    int flag = 0, top = 0;
+    while(*p && !flag){
+        if(top < 3){
+            ponerAlFinal(podio, (*p)->info, (*p)->tamInfo);
+            top++;
+        }
+        else if((*p)->sig && cmp((*p)->info, (*p)->sig->info) == 0)
+            ponerAlFinal(podio, (*p)->info, (*p)->tamInfo);
+        else{ 
+            flag = 1;
+            void *aux = malloc((*p)->tamInfo);
+            verUltimoLista(podio, aux,(*p)->tamInfo);
+            if(cmp((*p)->info, aux) == 0){
+                ponerAlFinal(podio, (*p)->info, (*p)->tamInfo);
             }
         }
-        printf("pri: %d, seg: %d, ter: %d\n", pri, seg, ter);
-        getchar();
+        p = &(*p)->sig;
     }
     puts("Podio:");
-    for(tNodo *i = podio; i; i = i->sig){
-        printf("%d\n", *(int *)i->info);
+    top = 1;
+    for(tNodo *i = *podio; i; i = i->sig) {
+        if (top == 1) {
+            printf("1er: %d\n", *(int *)i->info);
+            if (i->sig && cmp(i->info, i->sig->info) != 0) {
+                top++;
+            }
+        } else if (top == 2) {
+            printf("2do: %d\n", *(int *)i->info);
+            if (i->sig && cmp(i->info, i->sig->info) != 0) {
+                top++;
+            }
+        } else {
+            printf("3ro: %d\n", *(int *)i->info);
+        }
     }
 } 

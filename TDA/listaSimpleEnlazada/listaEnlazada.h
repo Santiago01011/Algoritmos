@@ -31,5 +31,5 @@ void filter(tLista *p, int condicion(const void*, void*), void *param);
 void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void *param);
 
 //ejercicio podio
-void insertarEnPodio(tLista *p, int (*cmp)(const void *, const void *));
+void insertarEnPodio(tLista *podio, tLista *p, int (*cmp)(const void *, const void *));
 #endif
