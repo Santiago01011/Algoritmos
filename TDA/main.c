@@ -15,15 +15,16 @@ int main(){
     crearLista(&podio);
 
 
-    int a = 1124, b = 456, c = 31;
+    int a = 1124, b = 456, c = 31, d = 20;
     ponerAlComienzo(&lista, &a, sizeof(int));
-    ponerAlComienzo(&lista, &a, sizeof(int));
-
+    ponerAlComienzo(&lista, &c, sizeof(int));
+    ponerAlComienzo(&lista, &c, sizeof(int));
     ponerAlComienzo(&lista, &b, sizeof(int));
     ponerAlComienzo(&lista, &c, sizeof(int));
     ponerAlComienzo(&lista, &c, sizeof(int));
     ponerAlComienzo(&lista, &c, sizeof(int));
-    ponerAlComienzo(&lista, &c, sizeof(int));
+    ponerAlComienzo(&lista, &d, sizeof(int));
+    ponerAlComienzo(&lista, &d, sizeof(int));
 
     ordenarListaInsercion(&lista, cmpIntDesc);
     puts("Lista Ordenada:");

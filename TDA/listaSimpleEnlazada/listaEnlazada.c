@@ -102,8 +102,7 @@ int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const 
     tNodo *nue;
     while(*p && cmp((*p)->info, d) < 0)
         p = &(*p)->sig;
-    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL ||
-    (nue->info = malloc(cantBytes)) == NULL){
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL || (nue->info = malloc(cantBytes)) == NULL){
         free(nue);
         return 0;
     }
@@ -172,28 +171,25 @@ void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void 
 //voy contabilizando los primeros y segundos.
 
 void insertarEnPodio(tLista *podio, tLista *p, int (*cmp)(const void *, const void *)){ //*p es una lista ordenada
-    int flag = 0, top = 0;
-    while(*p && !flag){
+    int top = 0;
+    tNodo *aux;
+    while(*p){
         if(top < 3){
-            ponerAlFinal(podio, (*p)->info, (*p)->tamInfo);
+            aux = *p;
+            ponerAlFinal(podio, aux->info, aux->tamInfo);
             top++;
         }
-        else if((*p)->sig && cmp((*p)->info, (*p)->sig->info) == 0)
-            ponerAlFinal(podio, (*p)->info, (*p)->tamInfo);
-        else{ 
-            flag = 1;
-            void *aux = malloc((*p)->tamInfo);
-            verUltimoLista(podio, aux,(*p)->tamInfo);
-            if(cmp((*p)->info, aux) == 0){
+        else{
+            verUltimoLista(podio, aux->info, aux->tamInfo);
+            if(cmp(aux->info, (*p)->info) == 0)
                 ponerAlFinal(podio, (*p)->info, (*p)->tamInfo);
-            }
         }
         p = &(*p)->sig;
     }
     puts("Podio:");
     top = 1;
     for(tNodo *i = *podio; i; i = i->sig) {
-        if (top == 1) {
+        if(top == 1){
             printf("1er: %d\n", *(int *)i->info);
             if (i->sig && cmp(i->info, i->sig->info) != 0) {
                 top++;
