@@ -16,22 +16,20 @@ typedef struct{
     char apellido[30];
     int edad;
     float promedio;
-}Alumnos;
+}Alumno;
 
-typedef int (*Cmp)(const void *, const void *);
 typedef void (*print_callback)(const void *);
 
 int cmpInt(const void *a, const void *b);
 int cmpIntDesc(const void *a, const void *b);
-int cmpPrecio(const void *a, const void *b);
 void imprimirLista(void* d, void* param);
 int mostrarArchivoGen(const char* nombreArch, size_t tamElem, print_callback printStruct);
-void printProducto(const void *p);
 int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem);
 
 //ejercicio podio
 void insertarEnPodio(tLista *podio, tLista *p, Cmp cmp);
 void printPodio(void* d, void* contexto);
+void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct);
 //ejercicio insertar top 10
 int insertarTop10(tLista *top, int* cantTop, const void* dato, unsigned tam, Cmp cmp);
 void mapTop10(void *dato, void *contexto);

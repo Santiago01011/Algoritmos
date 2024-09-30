@@ -25,6 +25,16 @@ void genArhivoProductos(){
     fclose(arch);
 }
 
+int cmpPrecio(const void *a, const void *b){
+    return ((Producto *)b)->precio - ((Producto *)a)->precio;
+}
+
+void printProducto(const void *p){
+    Producto *prod = (Producto *)p;
+    printf("Cod: %d, Descrp: %s, Stock: %d, Precio: %.2f\n", prod->codProd, prod->descrp, prod->stock, prod->precio);
+}
+
+
 int main(){
     //genArhivoProductos();
     tLista lista;

@@ -98,7 +98,7 @@ int verUltimoLista(const tLista *p, void *d, unsigned cantBytes){
     return 1;
 }
 
-int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const void *, const void *)){
+int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, Cmp cmp){
     tNodo *nue;
     while(*p && cmp((*p)->info, d) < 0)
         p = &(*p)->sig;
@@ -113,7 +113,7 @@ int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const 
     return 1;
 }
 
-void ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *)){
+void ordenarListaInsercion(tLista *p, Cmp cmp){
     tLista listaOrdenada;
     crearLista(&listaOrdenada);
     tNodo *aux;
@@ -134,7 +134,7 @@ void ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *)){
 
 
 //ordenar lista con quicksort
-void ordenarListaQuickSort(tLista *p, int (*cmp)(const void *, const void *)) {
+void ordenarListaQuickSort(tLista *p, Cmp cmp) {
     (*p) = quickSortRec(*p, obtenerUltimoNodo(*p), cmp);
 }
 
@@ -144,7 +144,7 @@ tNodo* obtenerUltimoNodo(tNodo *raiz) {
     return raiz;
 }
 
-tNodo* quickSortRec(tNodo *inicio, tNodo *fin, int (*cmp)(const void *, const void *)) {
+tNodo* quickSortRec(tNodo *inicio, tNodo *fin, Cmp cmp) {
     if (!inicio || inicio == fin)
         return inicio;
 
@@ -169,7 +169,7 @@ tNodo* quickSortRec(tNodo *inicio, tNodo *fin, int (*cmp)(const void *, const vo
     return nuevoInicio;
 }
 
-tNodo* particionar(tNodo *inicio, tNodo *fin, int (*cmp)(const void *, const void *), tNodo **nuevoInicio, tNodo **nuevoFin) {
+tNodo* particionar(tNodo *inicio, tNodo *fin, Cmp cmp, tNodo **nuevoInicio, tNodo **nuevoFin) {
     tNodo *pivote = fin;
     tNodo *prev = NULL, *cur = inicio, *tail = pivote;
 

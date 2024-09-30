@@ -12,6 +12,7 @@ typedef struct sNodo{
 } tNodo;
 
 typedef tNodo *tLista;
+typedef int (*Cmp)(const void *, const void *);
 
 //prototipos
 void crearLista(tLista *p);
@@ -24,12 +25,12 @@ int verPrimeroLista(const tLista *p, void *d, unsigned cantBytes);
 int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes);
 int sacarUltimoLista(tLista *p, void *d, unsigned cantBytes);
 int verUltimoLista(const tLista *p, void *d, unsigned cantBytes);
-int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const void *, const void *));
-void ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *));
-void ordenarListaQuickSort(tLista *p, int (*cmp)(const void *, const void *));
+int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, Cmp cmp);
+void ordenarListaInsercion(tLista *p, Cmp cmp);
+void ordenarListaQuickSort(tLista *p, Cmp cmp);
 tNodo* obtenerUltimoNodo(tNodo *raiz);
-tNodo* quickSortRec(tNodo *inicio, tNodo *fin, int (*cmp)(const void *, const void *));
-tNodo* particionar(tNodo *inicio, tNodo *fin, int (*cmp)(const void *, const void *), tNodo **nuevoInicio, tNodo **nuevoFin);
+tNodo* quickSortRec(tNodo *inicio, tNodo *fin, Cmp cmp);
+tNodo* particionar(tNodo *inicio, tNodo *fin, Cmp cmp, tNodo **nuevoInicio, tNodo **nuevoFin);
 void map(tLista *p, void accion(void*, void*), void *param);
 void filter(tLista *p, int condicion(const void*, void*), void *param);
 void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void *param);
