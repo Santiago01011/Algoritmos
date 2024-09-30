@@ -1,11 +1,25 @@
 #include "main.h"
 
+void printProducto(const void *p){
+    Producto *prod = (Producto *)p;
+    printf("Cod: %d, Descrp: %s, Stock: %d, Precio: %.2f\n", prod->codProd, prod->descrp, prod->stock, prod->precio);
+}
+
+void printMovimiento(const void *m){
+    Movimiento *mov = (Movimiento *)m;
+    printf("Cod: %d, Descrp: %s, Cantidad: %d\n", mov->codProd, mov->descrp, mov->cantidad);
+}
+
 int cmpInt(const void *a, const void *b){
     return *(int *)a - *(int *)b;
 }
 
 int cmpIntDesc(const void *a, const void *b){
     return *(int *)b - *(int *)a;
+}
+
+int cmpPrecio(const void *a, const void *b){
+    return ((Producto *)b)->precio - ((Producto *)a)->precio;
 }
 
 //ejercicio insertar top 10: los primeros 10 entran directo y de forma ordenada,
@@ -48,22 +62,74 @@ void insertarEnPodio(tLista *podio, tLista *p, int (*cmp)(const void *, const vo
     }
 }
 
-void mostrarPodio(tLista *podio, int (*cmp)(const void *, const void *)){
+void mostrarPodio(tLista *podio, int (*cmp)(const void *, const void *), void (*print_callback)(const void*)){
     puts("Podio:");
     int top = 1;
     for(tNodo *i = *podio; i; i = i->sig) {
         if(top == 1){
-            printf("1er: %d\n", *(int *)i->info);
+            printf("1er: ");
+            print_callback(i->info);
             if(i->sig && cmp(i->info, i->sig->info) != 0){
                 top++;
             }
         }else if(top == 2){
-            printf("2do: %d\n", *(int *)i->info);
+            printf("2do: ");
+            print_callback(i->info);
             if(i->sig && cmp(i->info, i->sig->info) != 0){
                 top++;
             }
         }else{
-            printf("3ro: %d\n", *(int *)i->info);
+            printf("3er: ");
+            print_callback(i->info); 
         }
     }
 }
+
+//ejercicio con archivo productos
+
+int mostrarArchivoGen(const char* nombreArch, size_t tamElem, void (*print_callback)(const void*)){
+    FILE *arch;
+    void *elem;
+    if((arch = fopen(nombreArch, "rb")) == NULL)
+        return 0;
+    elem = malloc(tamElem);
+    if(elem == NULL){
+        fclose(arch);
+        return 0;
+    }
+    printf("-----------------Archivo: %s-----------------\n", nombreArch);
+    while(fread(elem, tamElem, 1, arch) == 1){
+        print_callback(elem);
+    }
+    puts("---------------------------------------------");
+    free(elem);
+    fclose(arch);
+    return 1;
+}
+
+int cargarProductosEnLista(const char* nombreArch, tLista *lista) {
+    FILE *arch;
+    Producto prod;
+    if (!(arch = fopen(nombreArch, "rb")))
+        return 0;
+    while(fread(&prod, sizeof(Producto), 1, arch))
+        ponerAlFinal(lista, &prod, sizeof(Producto));
+    fclose(arch);
+    return 1;
+}
+
+int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem){
+    FILE* arch;
+    void* elem;
+    if (!(arch = fopen(nombreArch, "rb")))
+        return 0;
+    if(!(elem = (void *)malloc(tamElem))){
+        return 0;
+        fclose(arch);
+    }
+    while(fread(elem, tamElem, 1, arch) == 1)
+        ponerAlFinal(lista, elem, tamElem);
+    fclose(arch);
+    return 1;
+}
+
