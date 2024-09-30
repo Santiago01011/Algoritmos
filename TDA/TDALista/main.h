@@ -11,10 +11,12 @@ typedef struct{
 }Producto;
 
 typedef struct{
-    int codProd;
-    char descrp[30];
-    int cantidad;
-}Movimiento;
+    int legajo;
+    char nombre[30];
+    char apellido[30];
+    int edad;
+    float promedio;
+}Alumnos;
 
 typedef int (*Cmp)(const void *, const void *);
 typedef void (*print_callback)(const void *);
