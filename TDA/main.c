@@ -1,15 +1,15 @@
 #include "main.h"
 
-void agregarArhivoProductos(){
+void genArhivoProductos(){
     FILE *arch = fopen("archTests/productos.dat", "wb");
     if(arch == NULL)
         return;
     Producto p[] = {
         {1, "Espinaca", 130, 180.00},
-        {2, "Lechuga", 100, 100.00},
+        {2, "Lechuga", 100, 180.00},
         {3, "Tomate", 200, 200.00},
         {22, "Papa", 150, 100.00},
-        {5, "Zanahoria", 120, 80.00},
+        {5, "Zanahoria", 120, 180.00},
         {6, "Cebolla", 100, 50.00},
         {15, "Ajo", 50, 30.00},
         {8, "Pimiento", 80, 70.00},
@@ -26,36 +26,36 @@ void agregarArhivoProductos(){
 }
 
 int main(){
-    //agregarArhivoProductos();
+    genArhivoProductos();
     tLista lista;
     crearLista(&lista);
     tLista podio;
     crearLista(&podio);
     tLista top10;
     crearLista(&top10);
-    int cantTop = 0;
+    int cantTop10 = 0, topPodio = 0;
+    void* contextoTop10[] = {&top10, &cantTop10, &cmpPrecio};
+    void* contextoPodio[] = {&topPodio, &printProducto};
+    
 
     cargarEnListaArch("archTests/productos.dat", &lista, sizeof(Producto));
     puts("Lista de productos:");
-    for(tNodo *i = lista; i; i = i->sig)
-        printProducto(i->info);
+    map(&lista, imprimirLista, printProducto);
     puts("-------------------------------------------------");
-    ordenarListaInsercion(&lista, cmpIntDesc);
-    puts("Lista de productos ordenada por codigo:");
-    for(tNodo *i = lista; i; i = i->sig)
-        printProducto(i->info);
+    ordenarListaQuickSort(&lista, cmpPrecio);
+    puts("Lista de productos ordenada por precio:");
+    map(&lista, imprimirLista, printProducto);
     puts("-------------------------------------------------");
-    for(tNodo *i = lista; i; i = i->sig){
-        insertarTop10(&top10, cantTop, i->info, sizeof(Producto), cmpPrecio);
-        cantTop++;
-        }
+    //uso la funcion map para recorrer la lista y agregar los productos al top10
+    map(&lista, mapTop10, contextoTop10);
     puts("Top 10 de productos:");
-    for(tNodo *i = top10; i; i = i->sig)
-        printProducto(i->info);
+    map(&top10, imprimirLista, printProducto);
     puts("-------------------------------------------------");
-    ordenarListaInsercion(&lista, cmpPrecio);
-    insertarEnPodio(&podio, &lista, cmpPrecio);
-    mostrarPodio(&podio, cmpPrecio, printProducto);
+    //funcion insertarEnPodio agrega los 3 primeros elementos al podio, empates se agregan segun regla top3
+    insertarEnPodio(&podio, &top10, cmpPrecio);
+    //mostrarPodio(&podio, cmpPrecio, printProducto);
+    puts("Podio:");
+    map(&podio, printPodio, contextoPodio);
     puts("-------------------------------------------------");
 
 

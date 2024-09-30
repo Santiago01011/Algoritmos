@@ -116,11 +116,13 @@ int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, int (*cmp)(const 
 void ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *)){
     tLista listaOrdenada;
     crearLista(&listaOrdenada);
+    tNodo *aux;
+    tNodo **q;
     while(*p){
-        tNodo *aux = *p;
+        aux = *p;
         *p = aux->sig;
         aux->sig = NULL;
-        tNodo **q = &listaOrdenada;
+        q = &listaOrdenada;
         while(*q && cmp((*q)->info, aux->info) < 0)
             q = &(*q)->sig;
         aux->sig = *q;
@@ -128,6 +130,76 @@ void ordenarListaInsercion(tLista *p, int (*cmp)(const void *, const void *)){
     }
     *p = listaOrdenada;
 }
+
+
+
+//ordenar lista con quicksort
+void ordenarListaQuickSort(tLista *p, int (*cmp)(const void *, const void *)) {
+    (*p) = quickSortRec(*p, obtenerUltimoNodo(*p), cmp);
+}
+
+tNodo* obtenerUltimoNodo(tNodo *raiz) {
+    while (raiz != NULL && raiz->sig != NULL)
+        raiz = raiz->sig;
+    return raiz;
+}
+
+tNodo* quickSortRec(tNodo *inicio, tNodo *fin, int (*cmp)(const void *, const void *)) {
+    if (!inicio || inicio == fin)
+        return inicio;
+
+    tNodo *nuevoInicio = NULL, *nuevoFin = NULL;
+
+    tNodo *pivote = particionar(inicio, fin, cmp, &nuevoInicio, &nuevoFin);
+
+    if (nuevoInicio != pivote) {
+        tNodo *tmp = nuevoInicio;
+        while (tmp->sig != pivote)
+            tmp = tmp->sig;
+        tmp->sig = NULL;
+
+        nuevoInicio = quickSortRec(nuevoInicio, tmp, cmp);
+
+        tmp = obtenerUltimoNodo(nuevoInicio);
+        tmp->sig = pivote;
+    }
+
+    pivote->sig = quickSortRec(pivote->sig, nuevoFin, cmp);
+
+    return nuevoInicio;
+}
+
+tNodo* particionar(tNodo *inicio, tNodo *fin, int (*cmp)(const void *, const void *), tNodo **nuevoInicio, tNodo **nuevoFin) {
+    tNodo *pivote = fin;
+    tNodo *prev = NULL, *cur = inicio, *tail = pivote;
+
+    while (cur != pivote) {
+        if (cmp(cur->info, pivote->info) < 0) {
+            if ((*nuevoInicio) == NULL)
+                (*nuevoInicio) = cur;
+            prev = cur;
+            cur = cur->sig;
+        } else {
+            if (prev)
+                prev->sig = cur->sig;
+            tNodo *tmp = cur->sig;
+            cur->sig = NULL;
+            tail->sig = cur;
+            tail = cur;
+            cur = tmp;
+        }
+    }
+
+    if ((*nuevoInicio) == NULL)
+        (*nuevoInicio) = pivote;
+
+    (*nuevoFin) = tail;
+
+    return pivote;
+}
+
+
+
 
 void map(tLista *p, void accion(void*, void*), void *param){
     while(*p){
