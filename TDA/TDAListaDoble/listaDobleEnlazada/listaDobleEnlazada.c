@@ -4,15 +4,15 @@
 
 
 
-void crearLista(tLista *p){
+void createDoubleList(tLista *p){
     *p = NULL;
 }
 
-int listaVacia(const tLista *p){
+int isEmptyDoubleList(const tLista *p){
     return *p == NULL;
 }
 
-int listaLlena(const tLista *p, unsigned cantBytes){
+int isFullDoubleList(const tLista *p, unsigned cantBytes){
     tNodo *aux = (tNodo *)malloc(sizeof(tNodo));
     void *info = malloc(cantBytes);
     free(info);
@@ -20,7 +20,7 @@ int listaLlena(const tLista *p, unsigned cantBytes){
     return info == NULL || aux == NULL;
 }
 
-void vaciarLista(tLista *p){
+void clearDoubleList(tLista *p){
     tNodo *act = *p;
     if(act){
         while(act->ant)
@@ -43,7 +43,7 @@ void vaciarLista(tLista *p){
  * @param cantBytes Cantidad de bytes que ocupa el dato.
  * @return int 1 si se pudo insertar, 0 si no se pudo.
  */
-int ponerAlComienzo(tLista *p, const void *d, unsigned cantBytes){
+int addAtBeginningDoubleList(tLista *p, const void *d, unsigned cantBytes){
     tNodo *act = *p, *nue;
     if(act)
         while(act->ant)
@@ -58,7 +58,7 @@ int ponerAlComienzo(tLista *p, const void *d, unsigned cantBytes){
     nue->ant = NULL;
     if(act)
         act->ant = nue;
-    //*p = nue;  //no se si es necesario
+    *p = nue;
     return 1;
 }
 
@@ -71,7 +71,7 @@ int ponerAlComienzo(tLista *p, const void *d, unsigned cantBytes){
  * 
  * @return int 1 si se pudo sacar, 0 si no se pudo.
  */
-int sacarPrimeroLista(tLista *p, void *d, unsigned cantBytes){
+int removeFirstDoubleList(tLista *p, void *d, unsigned cantBytes){
     tNodo *act = *p;
     if(act == NULL)
         return 0;
@@ -88,7 +88,7 @@ int sacarPrimeroLista(tLista *p, void *d, unsigned cantBytes){
     return 1;
 }
 
-int verPrimeroLista(const tLista *p, void *d, unsigned cantBytes){
+int getFirstDoubleList(const tLista *p, void *d, unsigned cantBytes){
     if(*p == NULL)
         return 0;
     memcpy(d, (*p)->info, minimo(cantBytes, (*p)->tamInfo));
@@ -103,7 +103,7 @@ int verPrimeroLista(const tLista *p, void *d, unsigned cantBytes){
  * @param cantBytes Cantidad de bytes que ocupa el dato.
  * @return int 1 si se pudo insertar, 0 si no se pudo.
  */
-int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes){
+int addAtEndDoubleList(tLista *p, const void *d, unsigned cantBytes){
     tNodo *act = *p, *nue;
     
     if(act)
@@ -123,7 +123,7 @@ int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes){
     return 1;
 }
 
-int sacarUltimoLista(tLista *p, void *d, unsigned cantBytes){
+int removeLastDoubleList(tLista *p, void *d, unsigned cantBytes){
     while(*p && (*p)->sig)
         p = &(*p)->sig;
     if(*p == NULL)
@@ -141,7 +141,7 @@ int sacarUltimoLista(tLista *p, void *d, unsigned cantBytes){
     return 1;
 }
 
-int verUltimoLista(const tLista *p, void *d, unsigned cantBytes){
+int getLastDoubleList(const tLista *p, void *d, unsigned cantBytes){
     while(*p && (*p)->sig)
         p = &(*p)->sig;
     if(*p == NULL)
@@ -160,7 +160,7 @@ int verUltimoLista(const tLista *p, void *d, unsigned cantBytes){
  * @param acum Función de acumulación.
  * @return int 1 si se pudo insertar, 0 si no se pudo, DUPKEY si ya existe la clave.
  */
-int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, Cmp cmp, Acum acum){
+int addInOrderDoubleList(tLista *p, const void *d, unsigned cantBytes, Cmp cmp, Acum acum){
     tNodo *nue, *sig, *ant, *act = *p;
 
     if(act == NULL){
@@ -214,7 +214,7 @@ int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, Cmp cmp, Acum acu
  * @param p Puntero a la lista.
  * @param cmp Función de comparación.
  */
-void ordenarListaDoble(tLista *p, Cmp cmp){
+void sortDoubleList(tLista *p, Cmp cmp){
     tNodo *act = *p, *sup = NULL, *inf = NULL;
     int flag = 1;
     if(act == NULL)
@@ -260,7 +260,7 @@ void ordenarListaDoble(tLista *p, Cmp cmp){
 
 
 
-void map(tLista *p, void accion(void*, void*), void *param){
+void mapDoubleList(tLista *p, void accion(void*, void*), void *param){
     while(*p && (*p)->ant)
         p = &(*p)->ant;
     while(*p){

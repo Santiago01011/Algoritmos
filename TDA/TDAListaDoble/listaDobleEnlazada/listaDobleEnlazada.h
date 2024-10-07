@@ -18,20 +18,20 @@ typedef int (*Cmp)(const void *, const void *);
 typedef int (*Acum)(void **, unsigned *, const void *, unsigned);
 typedef void (*print_callback)(void *);
 
-//prototipos
-void crearLista(tLista *p);
-int listaVacia(const tLista *p);
-int listaLlena(const tLista *p, unsigned cantBytes);
-void vaciarLista(tLista *p);
-int ponerAlComienzo(tLista *p, const void *d, unsigned cantBytes);
-int sacarPrimeroLista(tLista *p, void *d, unsigned cantBytes);
-int verPrimeroLista(const tLista *p, void *d, unsigned cantBytes);
-int ponerAlFinal(tLista *p, const void *d, unsigned cantBytes);
-int sacarUltimoLista(tLista *p, void *d, unsigned cantBytes);
-int verUltimoLista(const tLista *p, void *d, unsigned cantBytes);
-int ponerEnOrden(tLista *p, const void *d, unsigned cantBytes, Cmp cmp, Acum acum);
-void ordenarListaDoble(tLista *p, Cmp cmp);
-void map(tLista *p, void accion(void*, void*), void *param);
+//prototypes
+void createDoubleList(tLista *p);
+int isEmptyDoubleList(const tLista *p);
+int isFullDoubleList(const tLista *p, unsigned cantBytes);
+void clearDoubleList(tLista *p);
+int addAtBeginningDoubleList(tLista *p, const void *d, unsigned cantBytes);
+int removeFirstDoubleList(tLista *p, void *d, unsigned cantBytes);
+int getFirstDoubleList(const tLista *p, void *d, unsigned cantBytes);
+int addAtEndDoubleList(tLista *p, const void *d, unsigned cantBytes);
+int removeLastDoubleList(tLista *p, void *d, unsigned cantBytes);
+int getLastDoubleList(const tLista *p, void *d, unsigned cantBytes);
+int addInOrderDoubleList(tLista *p, const void *d, unsigned cantBytes, Cmp cmp, Acum acum);
+void sortDoubleList(tLista *p, Cmp cmp);
+void mapDoubleList(tLista *p, void accion(void*, void*), void *param);
 void filter(tLista *p, int condicion(const void*, void*), void *param);
 void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void *param);
 

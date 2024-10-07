@@ -7,25 +7,25 @@ void printInt(void *d){
 int main(){
 
     tLista lista;
-    crearLista(&lista);
+    createDoubleList(&lista);
     int a[] = {8, 3, 1, 4, 1}, x = 0;
     for(int i = 0; i < 5; i++){
-        ponerAlFinal(&lista, &a[i], sizeof(int));
+        addAtEndDoubleList(&lista, &a[i], sizeof(int));
     }
 
-    ponerAlComienzo(&lista, &a[1], sizeof(int));
-    if(ponerEnOrden(&lista, &x, sizeof(int), cmpInt, NULL) == DUPKEY)
+    addAtBeginningDoubleList(&lista, &a[1], sizeof(int));
+    if(addInOrderDoubleList(&lista, &x, sizeof(int), cmpInt, NULL) == DUPKEY)
         puts("Clave duplicada");
     else
         puts("Clave insertada");
 
     puts("Lista sin ordenar:");
-    map(&lista, imprimirLista, printInt);
+    mapDoubleList(&lista, imprimirLista, printInt);
     
-    ordenarListaDoble(&lista, cmpInt);
+    sortDoubleList(&lista, cmpInt);
 
     puts("Lista ordenada:");
-    map(&lista, imprimirLista, printInt);
+    mapDoubleList(&lista, imprimirLista, printInt);
 
 
     return 0;
