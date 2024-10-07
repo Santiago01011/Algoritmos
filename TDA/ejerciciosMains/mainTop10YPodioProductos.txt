@@ -1,5 +1,13 @@
 #include "main.h"
 
+typedef struct{
+    int codProd;
+    char descrp[30];
+    int stock;
+    float precio;
+}Producto;
+
+
 void genArhivoProductos(){
     FILE *arch = fopen("archTests/productos.dat", "wb");
     if(arch == NULL)
@@ -33,6 +41,7 @@ void printProducto(const void *p){
     Producto *prod = (Producto *)p;
     printf("Cod: %d, Descrp: %s, Stock: %d, Precio: %.2f\n", prod->codProd, prod->descrp, prod->stock, prod->precio);
 }
+
 
 
 int main(){

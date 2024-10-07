@@ -83,35 +83,6 @@ void insertarEnPodio(tLista *podio, tLista *p, Cmp cmp){
     }
 }
 
-/**
- * @brief Imprime un dato del podio.
- * 
- * Imprime el dato del podio utilizando la función de impresión recibida por contexto.
- * 
- * @param d Puntero al dato que se va a imprimir.
- * @param contexto Puntero a un vector que contiene:
- *                - int*: Puntero al contador de elementos en el podio.
- *                - print_callback: Función de impresión.
- *                - Cmp: Puntero a función de comparación para ordenar los elementos.
- *                - void*: Puntero al ultimo dato de podio
- */
-void printPodio(void* d, void* contexto){
-    int *top = ((int **)contexto)[0];
-    print_callback printStruct = ((print_callback*)contexto)[1];
-    Cmp cmp = ((Cmp*)contexto)[2];
-    if(*top == 1){
-        printf("1er: ");
-        printStruct(d);
-    }else if(*top == 2){
-        printf("2do: ");
-        printStruct(d);
-    }else{
-        printf("3er: ");
-        printStruct(d);
-    }
-    (*top)++;
-}
-
 void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct){
     puts("Podio:");
     int top = 1;
@@ -260,3 +231,40 @@ int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem){
     return 1;
 }
 
+int txtABin_ALU(const char* nombreArchTxt, const char* nombreBin, size_t tamElem, Conv convertir){
+    FILE* archTxt = fopen(nombreArchTxt, "rt");
+    if(!archTxt){
+        printf("Error al abrir el archivo: %s",nombreArchTxt);
+        return 11;
+    }
+    FILE* archBin = fopen(nombreBin, "wb");
+    if(!archBin){
+        fclose(archTxt);
+        printf("Error al abrir el archivo: %s", nombreBin);
+        return 12;
+    }
+    void* elem = malloc(tamElem);
+    if(!elem){
+        printf("Error al asignar memoria");
+        fclose(archBin);
+        fclose(archTxt);
+        return 21;
+    }
+    char cad[1000];
+    // fgets(cad, 1000, archTxt); //para saltear encabezado
+    while(fgets(cad, 1000, archTxt)){
+        if(convertir(cad, elem) == 1)
+            fwrite(elem, tamElem, 1, archBin);
+    }
+    fclose(archTxt);
+    fclose(archBin);
+    free(elem);
+    return 1;
+}
+
+int convertirRegla(const char* linea, void* elem){
+    Agrupacion* aux = (Agrupacion*)elem;
+    if(sscanf(linea, "%d%[^\n]", &aux->numero, aux->nombre) == 2)
+        return 1;
+    return 0;
+}

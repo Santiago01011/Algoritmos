@@ -1,72 +1,74 @@
 #include "main.h"
 
-void genArhivoAlumnos(){
-    FILE *arch = fopen("../archTests/alumnos.dat", "wb");
-    if(arch == NULL)
+// Se dispone de un archivo de texto con el número y el nombre de cada agrupación que se presenta en
+// las elecciones para elegir los congresales de una asociación civil sin fines de lucro; y además de un
+// archivo binario en el que se almacenó el número de agrupación, de distrito y de región (un registro
+// por cada voto electrónico emitido).
+// Se requiere un proceso que a partir de la lectura de ambos archivos almacene en arrays
+// bidimensionales los nombres de las agrupaciones y el total de votos obtenidos por distrito.
+// A partir de los arrays, genere una lista (con inserción en orden), a fin de poder mostrar, al final del
+// proceso, los nombres de las tres agrupaciones que obtienen mayor cantidad de votos para cada
+// distrito.
+
+//ejemplo del archivo de texto:
+// 1028Celeste y Blanca
+// 4Verde
+// 125Unión por Todos y Para Todos
+// 3Frente para la Victoria
+// 8Frente Renovador
+// 2Liga Federal
+
+void generarArch(){
+    FILE *arch = fopen("../archTests/votos.dat", "wb");
+    if(!arch){
+        puts("Error al abrir el archivo");
         return;
-    Alumno a[]={ {1, "Juan", "Perez", 20, 8.5},
-                  {2, "Maria", "Gomez", 22, 7.5},
-                  {3, "Carlos", "Lopez", 21, 6.5},
-                  {4, "Ana", "Rodriguez", 23, 9.5},
-                  {5, "Pedro", "Garcia", 24, 7.0},
-                  {6, "Laura", "Fernandez", 25, 8.0},
-                  {7, "Diego", "Martinez", 26, 6.0},
-                  {8, "Silvia", "Alvarez", 27, 9.0},
-                  {9, "Jorge", "Diaz", 28, 5.5},
-                  {10, "Marta", "Torres", 29, 10.0},
-                  {11, "Raul", "Suarez", 30, 4.5},
-                  {12, "Elena", "Ramirez", 31, 9.8},
-                  {13, "Oscar", "Benitez", 32, 9.8},
-                  {14, "Luis", "Paz", 33, 6.8},
-                  {15, "Cecilia", "Vega", 34, 8.8},
-                  {16, "Fernando", "Rios", 35, 5.8},
-                  {17, "Gabriela", "Sosa", 36, 9.8},
-                  {18, "Hugo", "Molina", 37, 7.2},
-                  {19, "Adriana", "Luna", 38, 6.2},
-                  {20, "Ricardo", "Aguirre", 39, 8.2} };
-    fwrite(a, sizeof(Alumno), 20, arch);
+    }
+    Voto v[] = {
+        {1028, 1, 15}, // Celeste y Blanca
+        {4, 2, 0},    // Verde
+        {125, 3, 3},  // Unión por Todos y Para Todos
+        {3, 4, 5},    // Frente para la Victoria
+        {8, 5, 0},    // Frente Renovador
+        {2, 6, 0},    // Liga Federal
+        {1028, 1, 11}, // Celeste y Blanca
+        {4, 2, 0},    // Verde
+        {125, 3, 16},  // Unión por Todos y Para Todos
+        {3, 4, 8},    // Frente para la Victoria
+        {8, 5, 7},    // Frente Renovador
+        {2, 6, 0},    // Liga Federal
+        {1028, 1, 0}, // Celeste y Blanca
+        {4, 2, 3},    // Verde
+        {125, 3, 9},  // Unión por Todos y Para Todos
+        {3, 4, 0},    // Frente para la Victoria
+        {8, 5, 1},    // Frente Renovador
+        {2, 6, 0},    // Liga Federal
+        {1028, 1, 2}, // Celeste y Blanca
+        {4, 2, 0},    // Verde
+    };
+    fwrite(v, sizeof(Voto), sizeof(v)/sizeof(Voto), arch);
     fclose(arch);
 }
 
-void printAlumno(const void *a){
-    Alumno *al = (Alumno *)a;
-    printf("Legajo: %d | Apellido y Nombre: %s, %s | Edad: %d | Promedio: %.2f\n", al->legajo, al->apellido, al->nombre, al->edad, al->promedio);
+void printVoto(const void *v){
+    Voto *voto = (Voto *)v;
+    printf("|Agrupacion: %d|", voto->nagrup);
+    printf("Region: %d|", voto->region);
+    printf("Distrito: %d|\n", voto->distri);
+    puts("----------------------------");
 }
 
-int cmpPromedio(const void* a, const void* b){
-    float diff = ((Alumno*)b)->promedio - ((Alumno*)a)->promedio;
-    return diff > 0 ? 1 : diff < 0 ? -1 : 0;
+void printAgrupacion(const void *a){
+    Agrupacion *agr = (Agrupacion *)a;
+    printf("|Numero: %d|", agr->numero);
+    printf("Nombre: %s|\n", agr->nombre);
+    puts("----------------------------");
 }
-
 
 int main(){
-    genArhivoAlumnos();
-    tLista listaAlums, listaTop10, podio;
-    crearLista(&listaAlums);
-    crearLista(&listaTop10);
-    crearLista(&podio);
-    int *contTop = 0, contPodio = 1;
-    unsigned tam = sizeof(Alumno);
-    void *contextoTop10[] = {&listaTop10, &contTop, cmpPromedio, &tam};
-    //void *contextoPodio[] = {&contPodio, printAlumno, cmpPromedio};
-
-    cargarEnListaArch("../archTests/alumnos.dat", &listaAlums, sizeof(Alumno));
-    puts("Lista de alumnos sin ordenar:");
-    map(&listaAlums, imprimirLista, printAlumno);
-    puts("-------------------------------------------");
-    ordenarListaQuickSort(&listaAlums, cmpPromedio);
-    puts("Lista de alumnos ordenada por promedio:");
-    map(&listaAlums, imprimirLista, printAlumno);
-    puts("-------------------------------------------");
-    puts("Lista de Top 10 alumnos por promedio:");
-    map(&listaAlums, mapTop10, contextoTop10);
-    map(&listaTop10, imprimirLista, printAlumno);
-    puts("-------------------------------------------");
-    puts("Podio de alumnos por promedio:");
-    insertarEnPodio(&podio, &listaTop10, cmpPromedio);
-    //map(&podio, printPodio, contextoPodio);
-    mostrarPodio(&podio, cmpPromedio, printAlumno);
-
-
+    //generarArch();
+    mostrarArchivoGen("../archTests/votos.dat", sizeof(Voto), printVoto);
+    txtABin_ALU("../archTests/agrupaciones.txt", "../archTests/agrupaciones.dat", sizeof(Agrupacion), convertirRegla);
+    mostrarArchivoGen("../archTests/agrupaciones.dat", sizeof(Agrupacion), printAgrupacion);
     return 0;
 }

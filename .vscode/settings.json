@@ -2,6 +2,7 @@
     "files.associations": {
         "main.h": "c",
         "listadobleenlazada.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "listaenlazada.h": "c"
     }
 }
