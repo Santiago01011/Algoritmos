@@ -134,6 +134,74 @@ void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct){
         }
     }
 }
+//podio juli
+
+int insertar_en_podio(tLista* pl, void* dato, size_t tam, int cmp(const void*,const void*))
+{
+    int comp, pos = 1;
+    unsigned cont = 1;
+    tNodo* nue = NULL,
+         * elim,
+         * actual;
+    while(*pl && pos<=3)
+    {
+        actual = *pl;
+        if(!nue && (comp=cmp(actual->info,dato))<0)
+        {
+            nue = malloc(sizeof(tNodo));
+            if(!nue)
+                return 0;
+            nue->info = malloc(tam);
+            if(!nue->info)
+            {
+                free(nue);
+                return 0;
+            }
+            memcpy(nue->info,dato,tam);
+            nue->tamInfo = tam;
+            nue->sig = *pl;
+            *pl = nue;
+            cont++;
+            pl = &(*pl)->sig;
+        }
+        else do
+        {
+            cont++;
+            pl = &(*pl)->sig;
+        }while(*pl && (comp=cmp(actual->info,(*pl)->info))==0);
+        if(comp)
+            pos=cont;
+    }
+    if(!nue && ((cont<3) ||  !cmp(actual->info,dato)))//si todavia no lo inserte y hay lugar en el podio,
+    {                                                 //o no lo inserte y empata con el ultimo
+        nue = malloc(sizeof(tNodo));
+        if(!nue)
+            return 0;
+        nue->info = malloc(tam);
+        if(!nue->info)
+        {
+            free(nue);
+            return 0;
+        }
+        memcpy(nue->info,dato,tam);
+        nue->tamInfo = tam;
+        nue->sig = *pl;
+        *pl = nue;
+    }
+    else if(*pl && pos>3) //elimino los que ya no pertenecen al podio
+    {
+        while(*pl)
+        {
+            elim = *pl;
+            *pl = elim->sig;
+            free(elim->info);
+            free(elim);
+        }
+    }
+    if(nue)
+        return 1;
+    return 0;
+}
 
 //funciones genericas para archivos
 
