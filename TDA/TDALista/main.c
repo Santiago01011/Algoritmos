@@ -70,5 +70,6 @@ int main(){
     mostrarArchivoGen("../archTests/votos.dat", sizeof(Voto), printVoto);
     txtABin_ALU("../archTests/agrupaciones.txt", "../archTests/agrupaciones.dat", sizeof(Agrupacion), convertirRegla);
     mostrarArchivoGen("../archTests/agrupaciones.dat", sizeof(Agrupacion), printAgrupacion);
+    
     return 0;
 }
