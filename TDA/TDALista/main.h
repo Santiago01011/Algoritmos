@@ -18,7 +18,9 @@ typedef struct{
 
 typedef struct{
     char nagrup[25];
-    int votos;
+    int votosD;
+    int distri;
+    int totalVotos;
 }Resultado;
 
 typedef void (*print_callback)(const void *);
@@ -36,6 +38,8 @@ void leerVotos(int [MAX_AGRUP][MAX_DISTRI], Agrupacion vec[], int cantAgrup);
 int buscarBin(const void* v, const void* elem, Cmp cmp, int *pos, int ce, size_t tam);
 int cmpAgru(const void *a, const void *b);
 int cmpAgruNombre(const void *a, const void *b);
+int cmpRes(const void *a, const void *b);
+
 //genericos archivos
 int mostrarArchivoGen(const char* nombreArch, size_t tamElem, print_callback printStruct);
 int convertirRegla(const char* linea, void* elem);
@@ -44,6 +48,7 @@ int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem);
 
 //ejercicio podio
 void insertarEnPodio(tLista *podio, tLista *p, Cmp cmp);
+void insertarEnPodioU(tLista *podio, void *d, size_t tam, Cmp cmp, int *top);
 void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct);
 int insertar_en_podio(tLista* pl, void* dato, size_t tam, Cmp cmp);
 //ejercicio insertar top 10

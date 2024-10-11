@@ -83,6 +83,18 @@ void insertarEnPodio(tLista *podio, tLista *p, Cmp cmp){
     }
 }
 
+void insertarEnPodioU(tLista *podio, void *d, size_t tam, Cmp cmp, int *top){
+    tNodo *nue;
+    if(*top < 3){
+        ponerEnOrden(podio, d, tam, cmp);
+        (*top)++;
+    }else{
+        ponerEnOrden(podio, d, tam, cmp);
+        sacarUltimoLista(podio, NULL, 0);
+        (*top)++;
+    }
+}
+
 void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct){
     puts("Podio:");
     int top = 1;
@@ -279,6 +291,10 @@ int cmpAgruNombre(const void *a, const void *b){
     Agrupacion *agr1 = (Agrupacion *)a;
     Agrupacion *agr2 = (Agrupacion *)b;
     return strcmp(agr1->nombre, agr2->nombre);
+}
+
+int cmpRes(const void *a, const void *b){
+    return ((Resultado *)b)->votosD - ((Resultado *)a)->votosD;
 }
 
 int leerAgrup(Agrupacion vec[]){

@@ -67,10 +67,20 @@ void printAgrupacion(const void *a){
     puts("----------------------------");
 }
 
+void printResultado(const void *r){
+    Resultado *res = (Resultado *)r;
+    printf("|Agrupacion: %s|", res->nagrup);
+    printf("Votos Distrito: %d|", res->votosD);
+    printf("Distrito: %d|", res->distri);
+    printf("Total Votos: %d|\n", res->totalVotos);
+    puts("----------------------------");
+}
+
 int main(){
     int cantAgrup = 0;
-    int pos;
+    int pos, top = 0;
     Agrupacion agrupaciones[MAX_AGRUP];
+    Resultado auxRes;
     tLista podioAgrup;
     crearLista(&podioAgrup);
     int votosDistritos[MAX_AGRUP][MAX_DISTRI] = {0};
@@ -80,6 +90,34 @@ int main(){
     }
     qsort(agrupaciones, cantAgrup, sizeof(Agrupacion), cmpAgru);
     leerVotos(votosDistritos, agrupaciones, cantAgrup);
+    //podio distrito 1
+    for(int i = 0; i < cantAgrup; i++){
+        auxRes.distri = 1;
+        auxRes.votosD = votosDistritos[i][0];
+        strcpy(auxRes.nagrup, agrupaciones[i].nombre);
+        auxRes.totalVotos = 0;
+        insertarEnPodioU(&podioAgrup, &auxRes, sizeof(Resultado), cmpRes, &top);
+    }
+    //podio distrito 2
+    
+    // for(int i = top; i > 0; i--){
+    //     podioAgrup += i * sizeof(tNodo);
+    //     top--;
+    // }
+    for(int i = 0; i < cantAgrup; i++){
+        auxRes.distri = 2;
+        auxRes.votosD = votosDistritos[i][1];
+        strcpy(auxRes.nagrup, agrupaciones[i].nombre);
+        auxRes.totalVotos = 0;
+        insertarEnPodioU(&podioAgrup, &auxRes, sizeof(Resultado), cmpRes, &top);
+    }
+
+
+
+    puts("Podios por distrito:");
+    //map(&podioAgrup, imprimirLista, printResultado);
+    mostrarPodio(&podioAgrup, cmpRes, printResultado);
+    vaciarLista(&podioAgrup);
 
 
     // for (int i = 0; i < cantAgrup; i++){
@@ -94,3 +132,13 @@ int main(){
     return 0;
 }
 
+
+    // for(int i = 0; i < MAX_DISTRI; i++){
+    //     for(int j = 0; j < cantAgrup; j++){
+    //         auxRes.distri = i+1;
+    //         auxRes.votosD = votosDistritos[j][i];
+    //         strcpy(auxRes.nagrup, agrupaciones[j].nombre);
+    //         auxRes.totalVotos = 0;
+    //         insertar_en_podio(&podioAgrup, &auxRes, sizeof(Resultado), cmpRes);
+    //     }
+    // }
