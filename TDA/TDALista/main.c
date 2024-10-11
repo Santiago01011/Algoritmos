@@ -3,12 +3,15 @@
 // Se dispone de un archivo de texto con el número y el nombre de cada agrupación que se presenta en
 // las elecciones para elegir los congresales de una asociación civil sin fines de lucro; y además de un
 // archivo binario en el que se almacenó el número de agrupación, de distrito y de región (un registro
-// por cada voto electrónico emitido).
+// por caxda voto electrónico emitido).
 // Se requiere un proceso que a partir de la lectura de ambos archivos almacene en arrays
 // bidimensionales los nombres de las agrupaciones y el total de votos obtenidos por distrito.
 // A partir de los arrays, genere una lista (con inserción en orden), a fin de poder mostrar, al final del
 // proceso, los nombres de las tres agrupaciones que obtienen mayor cantidad de votos para cada
 // distrito.
+// En todo momento en la lista sólo deben quedar a lo sumo las tres agrupaciones ganadoras para cada
+// distrito, con nombre de agrupación (sólo los primeros 25 caracteres para el ordenamiento alfabético)
+// y los votos obtenidos por la agrupación en qué distrito y el total de votos obtenidos en el país.
 
 //ejemplo del archivo de texto:
 // 1028Celeste y Blanca
@@ -18,37 +21,36 @@
 // 8Frente Renovador
 // 2Liga Federal
 
-void generarArch(){
-    FILE *arch = fopen("../archTests/votos.dat", "wb");
-    if(!arch){
-        puts("Error al abrir el archivo");
-        return;
-    }
-    Voto v[] = {
-        {1028, 1, 15}, // Celeste y Blanca
-        {4, 2, 0},    // Verde
-        {125, 3, 3},  // Unión por Todos y Para Todos
-        {3, 4, 5},    // Frente para la Victoria
-        {8, 5, 0},    // Frente Renovador
-        {2, 6, 0},    // Liga Federal
-        {1028, 1, 11}, // Celeste y Blanca
-        {4, 2, 0},    // Verde
-        {125, 3, 16},  // Unión por Todos y Para Todos
-        {3, 4, 8},    // Frente para la Victoria
-        {8, 5, 7},    // Frente Renovador
-        {2, 6, 0},    // Liga Federal
-        {1028, 1, 0}, // Celeste y Blanca
-        {4, 2, 3},    // Verde
-        {125, 3, 9},  // Unión por Todos y Para Todos
-        {3, 4, 0},    // Frente para la Victoria
-        {8, 5, 1},    // Frente Renovador
-        {2, 6, 0},    // Liga Federal
-        {1028, 1, 2}, // Celeste y Blanca
-        {4, 2, 0},    // Verde
-    };
-    fwrite(v, sizeof(Voto), sizeof(v)/sizeof(Voto), arch);
-    fclose(arch);
-}
+// void generarArch(){
+//     FILE *arch = fopen("../archTests/votos.dat", "ab");
+//     if(!arch){
+//         puts("Error al abrir el archivo");
+//         return;
+//     }
+//     Voto v[] = {
+//         {2, 6, 10},   // Liga Federal
+//         {1028, 1, 10}, // Celeste y Blanca
+//         {4, 2, 10},   // Verde
+//         {125, 3, 10}, // Unión por Todos y Para Todos
+//         {4, 2, 10},   // Verde
+//         {4, 2, 10},   // Verde
+//         {3, 4, 10},   // Frente para la Victoria
+//         {8, 5, 10},   // Frente Renovador
+//         {8, 5, 10},   // Frente Renovador
+//         {8, 5, 10},   // Frente Renovador
+//         {2, 6, 10},   // Liga Federal
+//         {2, 6, 10},   // Liga Federal
+//         {2, 6, 10},   // Liga Federal
+//         {1028, 1, 10}, // Celeste y Blanca
+//         {4, 2, 10},   // Verde
+//         {125, 3, 10}, // Unión por Todos y Para Todos
+//         {3, 4, 10},   // Frente para la Victoria
+//     };
+//     fwrite(v, sizeof(Voto), sizeof(v)/sizeof(Voto), arch);
+//     fclose(arch);
+// }
+
+
 
 void printVoto(const void *v){
     Voto *voto = (Voto *)v;
@@ -66,10 +68,29 @@ void printAgrupacion(const void *a){
 }
 
 int main(){
-    //generarArch();
-    mostrarArchivoGen("../archTests/votos.dat", sizeof(Voto), printVoto);
-    txtABin_ALU("../archTests/agrupaciones.txt", "../archTests/agrupaciones.dat", sizeof(Agrupacion), convertirRegla);
-    mostrarArchivoGen("../archTests/agrupaciones.dat", sizeof(Agrupacion), printAgrupacion);
+    int cantAgrup = 0;
+    int pos;
+    Agrupacion agrupaciones[MAX_AGRUP];
+    tLista podioAgrup;
+    crearLista(&podioAgrup);
+    int votosDistritos[MAX_AGRUP][MAX_DISTRI] = {0};
+    if(!(cantAgrup = leerAgrup(agrupaciones))){
+        puts("Error al leer las agrupaciones");
+        return 1;
+    }
+    qsort(agrupaciones, cantAgrup, sizeof(Agrupacion), cmpAgru);
+    leerVotos(votosDistritos, agrupaciones, cantAgrup);
+
+
+    // for (int i = 0; i < cantAgrup; i++){
+        
+    //     if(buscarBin(&agrupaciones, &agrupaciones[i], cmpAgru, &pos, cantAgrup, sizeof(Agrupacion))){ 
+    //         printf("Encontrado en la posicion %d\n", pos);
+    //         printAgrupacion(&agrupaciones[pos]);
+    //     }
+    // }
+
     
     return 0;
 }
+

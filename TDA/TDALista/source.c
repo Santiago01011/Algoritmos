@@ -107,7 +107,7 @@ void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct){
 }
 //podio juli
 
-int insertar_en_podio(tLista* pl, void* dato, size_t tam, int cmp(const void*,const void*))
+int insertar_en_podio(tLista* pl, void* dato, size_t tam, Cmp cmp)
 {
     int comp, pos = 1;
     unsigned cont = 1;
@@ -264,7 +264,87 @@ int txtABin_ALU(const char* nombreArchTxt, const char* nombreBin, size_t tamElem
 
 int convertirRegla(const char* linea, void* elem){
     Agrupacion* aux = (Agrupacion*)elem;
-    if(sscanf(linea, "%d%[^\n]", &aux->numero, aux->nombre) == 2)
+    if(sscanf(linea, "%d%25[^\n]", &aux->numero, aux->nombre) == 2)
         return 1;
+    return 0;
+}
+
+int cmpAgru(const void *a, const void *b){
+    Agrupacion *agr1 = (Agrupacion *)a;
+    Agrupacion *agr2 = (Agrupacion *)b;
+    return agr1->numero - agr2->numero;
+}
+
+int cmpAgruNombre(const void *a, const void *b){
+    Agrupacion *agr1 = (Agrupacion *)a;
+    Agrupacion *agr2 = (Agrupacion *)b;
+    return strcmp(agr1->nombre, agr2->nombre);
+}
+
+int leerAgrup(Agrupacion vec[]){
+    int i = 0;
+    char linea[100];
+    void * elem;
+    FILE* arch = fopen("../archTests/agrupaciones.txt", "r");
+    if(!arch){
+        puts("Error al abrir el archivo");
+        return 0;
+    }
+    while(fgets(linea, 100, arch)){
+        if(convertirRegla(linea, &vec[i]) == 1)
+            i++;
+    }
+    fclose(arch);
+    return i;
+}
+
+void leerVotos(int votosDistritos[MAX_AGRUP][MAX_DISTRI], Agrupacion vec[], int cantAgrup) {
+    Voto aux;
+    FILE *arch = fopen("../archTests/votos.dat", "rb");
+    if (!arch) {
+        puts("Error al abrir el archivo");
+        return;
+    }
+
+    while (fread(&aux, sizeof(Voto), 1, arch) == 1) {
+        int pos;
+        if (buscarBin(vec, &aux, cmpAgru, &pos, cantAgrup, sizeof(Agrupacion)) == 1) {
+            votosDistritos[pos][aux.distri - 1]++;
+        }
+    }
+
+    fclose(arch);
+
+    printf("      ");
+    for(int i=0; i< MAX_DISTRI; i++){
+        printf("%3d ", i+1);
+    }
+    puts("");
+    for(int i = 0; i < cantAgrup; i++){
+        printf("%4d: ", vec[i].numero);
+        for(int j = 0; j < MAX_DISTRI; j++){
+            printf("%3d ", votosDistritos[i][j]);
+        }
+        puts("");
+    }
+}
+
+int buscarBin(const void* v, const void* elem, Cmp cmp, int *pos, int ce, size_t tam){
+    int i = 0, f = ce, m, res;
+    while(i <= f){
+        m = i + (f - i) / 2;
+        // conseguir el elemento del medio del vector
+        const void *med = (char*)v + m * tam;   
+        res = cmp(med, elem);
+        if(res == 0){
+            *pos = m;
+            return 1;
+        }else if(res < 0){
+            i = m + 1;
+        }else {
+            f = m - 1;
+        }
+    }
+    *pos = -1;
     return 0;
 }
