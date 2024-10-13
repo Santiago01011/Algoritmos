@@ -28,7 +28,8 @@
 //         return;
 //     }
 //     Voto v[] = {
-//         {2, 6, 10},   // Liga Federal
+//         {125, 1, 1}, // Unión por Todos y Para Todos
+//         {125, 1, 1}, // Unión por Todos y Para Todos
 //         {1028, 1, 10}, // Celeste y Blanca
 //         {4, 2, 10},   // Verde
 //         {125, 3, 10}, // Unión por Todos y Para Todos
@@ -70,13 +71,14 @@ void printAgrupacion(const void *a){
 void printResultado(const void *r){
     Resultado *res = (Resultado *)r;
     printf("|Agrupacion: %s|", res->nagrup);
-    printf("Votos Distrito: %d|", res->votosD);
     printf("Distrito: %d|", res->distri);
+    printf("Votos Distrito: %d|", res->votosD);
     printf("Total Votos: %d|\n", res->totalVotos);
     puts("----------------------------");
 }
 
 int main(){
+    //generarArch();
     int cantAgrup = 0;
     int pos, top = 0;
     Agrupacion agrupaciones[MAX_AGRUP];
@@ -90,33 +92,27 @@ int main(){
     }
     qsort(agrupaciones, cantAgrup, sizeof(Agrupacion), cmpAgru);
     leerVotos(votosDistritos, agrupaciones, cantAgrup);
-    //podio distrito 1
-    for(int i = 0; i < cantAgrup; i++){
-        auxRes.distri = 1;
-        auxRes.votosD = votosDistritos[i][0];
-        strcpy(auxRes.nagrup, agrupaciones[i].nombre);
-        auxRes.totalVotos = 0;
-        insertarEnPodioU(&podioAgrup, &auxRes, sizeof(Resultado), cmpRes, &top);
-    }
-    //podio distrito 2
-    
-    // for(int i = top; i > 0; i--){
-    //     podioAgrup += i * sizeof(tNodo);
-    //     top--;
-    // }
-    for(int i = 0; i < cantAgrup; i++){
-        auxRes.distri = 2;
-        auxRes.votosD = votosDistritos[i][1];
-        strcpy(auxRes.nagrup, agrupaciones[i].nombre);
-        auxRes.totalVotos = 0;
-        insertarEnPodioU(&podioAgrup, &auxRes, sizeof(Resultado), cmpRes, &top);
-    }
+    //podioAux apunta al principio de la lista, voy a usar el puntero para moverme por el top
+    tLista *podioAux = &podioAgrup;
+    for(int j = 0; j < MAX_DISTRI; j++){
+        top = 0;
+        for(int i = 0; i < cantAgrup; i++){
+            auxRes.distri = j + 1;
+            auxRes.votosD = votosDistritos[i][j];
+            strcpy(auxRes.nagrup, agrupaciones[i].nombre);
+            auxRes.totalVotos = 0;
+            if(auxRes.votosD > 0)
+                insertarEnPodioU(podioAux, &auxRes, sizeof(Resultado), cmpRes, &top);
+        }
+        while(*podioAux){
+            podioAux = &(*podioAux)->sig;
+        }
 
+    }
 
 
     puts("Podios por distrito:");
-    //map(&podioAgrup, imprimirLista, printResultado);
-    mostrarPodio(&podioAgrup, cmpRes, printResultado);
+    mostrarPodioDist(&podioAgrup, cmpRes, printResultado);
     vaciarLista(&podioAgrup);
 
 

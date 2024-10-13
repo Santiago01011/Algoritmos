@@ -50,6 +50,7 @@ int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem);
 void insertarEnPodio(tLista *podio, tLista *p, Cmp cmp);
 void insertarEnPodioU(tLista *podio, void *d, size_t tam, Cmp cmp, int *top);
 void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct);
+void mostrarPodioDist(tLista *podio, Cmp cmp, print_callback printStruct);
 int insertar_en_podio(tLista* pl, void* dato, size_t tam, Cmp cmp);
 //ejercicio insertar top 10
 int insertarTop10(tLista *top, int* cantTop, const void* dato, unsigned tam, Cmp cmp);

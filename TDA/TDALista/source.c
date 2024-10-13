@@ -84,14 +84,19 @@ void insertarEnPodio(tLista *podio, tLista *p, Cmp cmp){
 }
 
 void insertarEnPodioU(tLista *podio, void *d, size_t tam, Cmp cmp, int *top){
-    tNodo *nue;
+    void *aux;
     if(*top < 3){
         ponerEnOrden(podio, d, tam, cmp);
         (*top)++;
     }else{
-        ponerEnOrden(podio, d, tam, cmp);
-        sacarUltimoLista(podio, NULL, 0);
-        (*top)++;
+        if(aux = malloc(tam)){
+            verUltimoLista(podio, aux, tam);
+            if(cmp(aux, d) > 0){
+                ponerEnOrden(podio, d, tam, cmp);
+                sacarUltimoLista(podio, NULL, 0);
+            }
+            free(aux);
+        }
     }
 }
 
@@ -115,6 +120,39 @@ void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct){
             printf("3ro:");
             printStruct(i->info);
         }
+    }
+}
+
+void mostrarPodioDist(tLista *podio, Cmp cmp, print_callback printStruct){
+    int top, dist;
+    Resultado *aux;
+    while(*podio){
+        top = 1;
+        aux = (*podio)->info;
+        dist = aux->distri;
+        printf("Distrito %d\n", dist);
+        do{    
+            if(top == 1){
+                printf("1er: ");
+                printStruct((*podio)->info);
+                if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
+                    top++;
+                }
+            }else if(top == 2){
+                printf("2do: ");
+                printStruct((*podio)->info);
+                if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
+                    top++;
+                }
+            }else if(top == 3){
+                printf("3ro: ");
+                printStruct((*podio)->info);
+                if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
+                    top++;
+                }
+            }
+            podio = &(*podio)->sig;
+        }while(*podio && ((Resultado *)(*podio)->info)->distri == dist);
     }
 }
 //podio juli
