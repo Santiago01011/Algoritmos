@@ -79,8 +79,8 @@ void printResultado(const void *r){
 
 int main(){
     //generarArch();
-    int cantAgrup = 0;
-    int pos, top = 0;
+    int cantAgrup = 0, pos, top = 0;
+    int totalVotosAgrup[MAX_AGRUP] = {0};
     Agrupacion agrupaciones[MAX_AGRUP];
     Resultado auxRes;
     tLista podioAgrup;
@@ -92,6 +92,11 @@ int main(){
     }
     qsort(agrupaciones, cantAgrup, sizeof(Agrupacion), cmpAgru);
     leerVotos(votosDistritos, agrupaciones, cantAgrup);
+    for(int i = 0; i < cantAgrup; i++){
+        for(int j = 0; j < MAX_DISTRI; j++){
+            totalVotosAgrup[i] += votosDistritos[i][j];
+        }
+    }
     //podioAux apunta al principio de la lista, voy a usar el puntero para moverme por el top
     tLista *podioAux = &podioAgrup;
     for(int j = 0; j < MAX_DISTRI; j++){
@@ -100,7 +105,7 @@ int main(){
             auxRes.distri = j + 1;
             auxRes.votosD = votosDistritos[i][j];
             strcpy(auxRes.nagrup, agrupaciones[i].nombre);
-            auxRes.totalVotos = 0;
+            auxRes.totalVotos = totalVotosAgrup[i];
             if(auxRes.votosD > 0)
                 insertarEnPodioU(podioAux, &auxRes, sizeof(Resultado), cmpRes, &top);
         }

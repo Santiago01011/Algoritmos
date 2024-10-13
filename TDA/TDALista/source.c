@@ -95,6 +95,9 @@ void insertarEnPodioU(tLista *podio, void *d, size_t tam, Cmp cmp, int *top){
                 ponerEnOrden(podio, d, tam, cmp);
                 sacarUltimoLista(podio, NULL, 0);
             }
+            if(cmp(aux, d) == 0){
+                ponerEnOrden(podio, d, tam, cmp);
+            }
             free(aux);
         }
     }

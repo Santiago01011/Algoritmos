@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "listaSimpleEnlazada/listaEnlazada.h"
-#define MAX_AGRUP 999
+#define MAX_AGRUP 99
 #define MAX_DISTRI 20
 
 typedef struct{
