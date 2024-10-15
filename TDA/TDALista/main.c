@@ -115,31 +115,9 @@ int main(){
 
     }
 
-
     puts("Podios por distrito:");
     mostrarPodioDist(&podioAgrup, cmpRes, printResultado);
     vaciarLista(&podioAgrup);
-
-
-    // for (int i = 0; i < cantAgrup; i++){
-        
-    //     if(buscarBin(&agrupaciones, &agrupaciones[i], cmpAgru, &pos, cantAgrup, sizeof(Agrupacion))){ 
-    //         printf("Encontrado en la posicion %d\n", pos);
-    //         printAgrupacion(&agrupaciones[pos]);
-    //     }
-    // }
-
     
     return 0;
 }
-
-
-    // for(int i = 0; i < MAX_DISTRI; i++){
-    //     for(int j = 0; j < cantAgrup; j++){
-    //         auxRes.distri = i+1;
-    //         auxRes.votosD = votosDistritos[j][i];
-    //         strcpy(auxRes.nagrup, agrupaciones[j].nombre);
-    //         auxRes.totalVotos = 0;
-    //         insertar_en_podio(&podioAgrup, &auxRes, sizeof(Resultado), cmpRes);
-    //     }
-    // }
