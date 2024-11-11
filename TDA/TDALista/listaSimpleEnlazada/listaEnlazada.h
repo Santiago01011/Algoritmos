@@ -13,6 +13,7 @@ typedef struct sNodo{
 
 typedef tNodo *tLista;
 typedef int (*Cmp)(const void *, const void *);
+typedef void (*Accion)(void*, void*);
 
 //prototipos
 void crearLista(tLista *p);
@@ -34,5 +35,6 @@ tNodo* particionar(tNodo *inicio, tNodo *fin, Cmp cmp, tNodo **nuevoInicio, tNod
 void map(tLista *p, void accion(void*, void*), void *param);
 void filter(tLista *p, int condicion(const void*, void*), void *param);
 void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void *param);
+int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem, Cmp cmp, Accion accion);
 
 #endif

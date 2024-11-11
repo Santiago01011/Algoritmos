@@ -26,13 +26,12 @@ void vaciarLista(tLista *p){
         *p = aux->sig;
         free(aux->info);
         free(aux);
-    }    
+    }
 }
 
 int ponerAlComienzo(tLista *p, const void *d, unsigned cantBytes){
     tNodo *nue;
-    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL ||
-    (nue->info = malloc(cantBytes)) == NULL){
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL || (nue->info = malloc(cantBytes)) == NULL){
         free(nue);
         return 0;
     }
@@ -229,3 +228,51 @@ void* reduce(tLista *p, void *res, void accion(const void*, void*, void*), void 
     }
     return res;
 }
+
+/**
+ * @brief Carga un archivo binario en una lista.
+ *
+ * Carga el contenido de un archivo en una lista.
+ *
+ * @param nombreArch Puntero a la ruta del archivo que se va a cargar.
+ * @param lista Puntero a la lista donde se va a cargar el archivo.
+ * @param tamElem Tama�o de los elementos del archivo.
+ * @param cmp Puntero a funci�n de comparaci�n.
+ * @return int Devuelve 1 si pudo cargar el archivo, 0 en caso contrario.
+ */
+int cargarEnListaArch(const char* nombreArch, tLista *p, size_t tamElem, Cmp cmp, Accion accion){
+    FILE* arch;
+    void* elem;
+    tNodo *nue;
+    tLista *inicio = p;
+
+    if (!(arch = fopen(nombreArch, "rb")))
+        return 0;
+    if(!(elem = (void *)malloc(tamElem))){
+        fclose(arch);
+        return 0;
+    }
+
+    while(fread(elem, tamElem, 1, arch) == 1){
+        p = inicio; //reinicio el puntero a lista para poder insertar en orden
+        while(*p && cmp((*p)->info, elem) < 0)
+            p = &(*p)->sig;
+        if(*p && cmp((*p)->info, elem) == 0)
+            accion((*p)->info, elem);
+        else{
+            if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL || (nue->info = malloc(tamElem)) == NULL){
+            free(nue);
+            return 0;
+            }
+            memcpy(nue->info, elem, tamElem);
+            nue->tamInfo = tamElem;
+            nue->sig = *p;
+            *p = nue;
+        }
+    }
+    free(elem);
+    fclose(arch);
+    return 1;
+}
+
+

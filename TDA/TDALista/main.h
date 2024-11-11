@@ -4,24 +4,17 @@
 #include "listaSimpleEnlazada/listaEnlazada.h"
 #define MAX_AGRUP 99
 #define MAX_DISTRI 20
-
+//Dado un archivo binario “lote.dat” cuyos registros, no están ordenados y tienen la siguiente estructura:
+// • Provincia: 99 (dos dígitos – 23 provincias numeradas del 01 al 23)
+// • Localidad: xxx...x (50 caracteres)
+// • Superficie: 99999.99 (kilómetros cuadrados)
+// • Población: 9999 (habitantes)
 typedef struct{
-    int numero;
-    char nombre[25];
-}Agrupacion;
-
-typedef struct{
-    int nagrup; //num agrupacion, de 1 a 9999
-    int region; //num region, de 1 a 9
-    int distri; //num distrito, de 1 a 20
-}Voto;
-
-typedef struct{
-    char nagrup[25];
-    int votosD;
-    int distri;
-    int totalVotos;
-}Resultado;
+    int numProv;
+    char loc[51];
+    float sup;
+    int pob;
+}Lote;
 
 typedef void (*print_callback)(const void *);
 typedef int (*Conv)(const char*, void*);
@@ -30,19 +23,14 @@ int cmpInt(const void *a, const void *b);
 int cmpIntDesc(const void *a, const void *b);
 void imprimirLista(void* d, void* param);
 
+//parcial lotes
+int cmpSup(const void *a, const void *b);
+void printLote(const void *l);
 
 
-//ejercicio 4.6
-int leerAgrup(Agrupacion vec[]);
-void leerVotos(int [MAX_AGRUP][MAX_DISTRI], Agrupacion vec[], int cantAgrup);
-int buscarBin(const void* v, const void* elem, Cmp cmp, int *pos, int ce, size_t tam);
-int cmpAgru(const void *a, const void *b);
-int cmpAgruNombre(const void *a, const void *b);
-int cmpRes(const void *a, const void *b);
 
 //genericos archivos
 int mostrarArchivoGen(const char* nombreArch, size_t tamElem, print_callback printStruct);
-int convertirRegla(const char* linea, void* elem);
 int txtABin_ALU(const char* nombreArchTxt, const char* nombreBin, size_t tamElem, Conv convertir);
 int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem);
 
@@ -50,10 +38,10 @@ int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem);
 void insertarEnPodio(tLista *podio, tLista *p, Cmp cmp);
 void insertarEnPodioU(tLista *podio, void *d, size_t tam, Cmp cmp, int *top);
 void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct);
-void mostrarPodioDist(tLista *podio, Cmp cmp, print_callback printStruct);
 int insertar_en_podio(tLista* pl, void* dato, size_t tam, Cmp cmp);
 //ejercicio insertar top 10
-int insertarTop10(tLista *top, int* cantTop, const void* dato, unsigned tam, Cmp cmp);
+int insertarTop5(tLista *top, int* cantTop, const void* dato, unsigned tam, Cmp cmp);
+int insertarTop5V2(tLista *top, int *cantTop, const void *dato, unsigned tam, Cmp cmp);
 void mapTop10(void *dato, void *contexto);
 
 

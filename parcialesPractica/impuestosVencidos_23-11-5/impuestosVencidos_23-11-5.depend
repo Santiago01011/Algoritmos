@@ -1,0 +1,32 @@
+# depslib dependency file v1.0
+1731180445 source:c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\impuestosvencidos_23-11-5\main.c
+	"main.h"
+
+1731179214 c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\impuestosvencidos_23-11-5\main.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"menu/menu.h"
+	"../../TDA/TDALista/listaSimpleEnlazada/listaEnlazada.h"
+
+1731178526 source:c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\impuestosvencidos_23-11-5\source.c
+	"main.h"
+
+1731166328 c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\impuestosvencidos_23-11-5\menu\menu.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1731220760 source:c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\impuestosvencidos_23-11-5\menu\menu.c
+	"menu.h"
+	"../main.h"
+
+1731221439 source:c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\tda\tdalista\listasimpleenlazada\listaenlazada.c
+	"listaEnlazada.h"
+
+1731180208 c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\tda\tdalista\listasimpleenlazada\listaenlazada.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

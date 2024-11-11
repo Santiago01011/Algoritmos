@@ -1,123 +1,81 @@
 #include "main.h"
 
-// Se dispone de un archivo de texto con el número y el nombre de cada agrupación que se presenta en
-// las elecciones para elegir los congresales de una asociación civil sin fines de lucro; y además de un
-// archivo binario en el que se almacenó el número de agrupación, de distrito y de región (un registro
-// por caxda voto electrónico emitido).
-// Se requiere un proceso que a partir de la lectura de ambos archivos almacene en arrays
-// bidimensionales los nombres de las agrupaciones y el total de votos obtenidos por distrito.
-// A partir de los arrays, genere una lista (con inserción en orden), a fin de poder mostrar, al final del
-// proceso, los nombres de las tres agrupaciones que obtienen mayor cantidad de votos para cada
-// distrito.
-// En todo momento en la lista sólo deben quedar a lo sumo las tres agrupaciones ganadoras para cada
-// distrito, con nombre de agrupación (sólo los primeros 25 caracteres para el ordenamiento alfabético)
-// y los votos obtenidos por la agrupación en qué distrito y el total de votos obtenidos en el país.
+// Ejercicio 1:
+// Dado un archivo binario “lote.dat” cuyos registros, no están ordenados y tienen la siguiente estructura:
+// • Provincia: 99 (dos dígitos – 23 provincias numeradas del 01 al 23)
+// • Localidad: xxx...x (50 caracteres)
+// • Superficie: 99999.99 (kilómetros cuadrados)
+// • Población: 9999 (habitantes)
+// Se pide:
+// Desarrollar una aplicación que informe las 5 localidades con mayor superficie.
 
-//ejemplo del archivo de texto:
-// 1028Celeste y Blanca
-// 4Verde
-// 125Unión por Todos y Para Todos
-// 3Frente para la Victoria
-// 8Frente Renovador
-// 2Liga Federal
+// El proceso debe trabajar de forma óptima, manipulando las estructuras de datos la menor cantidad de ve-
+// ces posible y utilizando la menor cantidad de memoria posible.
 
-// void generarArch(){
-//     FILE *arch = fopen("../archTests/votos.dat", "ab");
-//     if(!arch){
-//         puts("Error al abrir el archivo");
-//         return;
-//     }
-//     Voto v[] = {
-//         {125, 1, 1}, // Unión por Todos y Para Todos
-//         {125, 1, 1}, // Unión por Todos y Para Todos
-//         {1028, 1, 10}, // Celeste y Blanca
-//         {4, 2, 10},   // Verde
-//         {125, 3, 10}, // Unión por Todos y Para Todos
-//         {4, 2, 10},   // Verde
-//         {4, 2, 10},   // Verde
-//         {3, 4, 10},   // Frente para la Victoria
-//         {8, 5, 10},   // Frente Renovador
-//         {8, 5, 10},   // Frente Renovador
-//         {8, 5, 10},   // Frente Renovador
-//         {2, 6, 10},   // Liga Federal
-//         {2, 6, 10},   // Liga Federal
-//         {2, 6, 10},   // Liga Federal
-//         {1028, 1, 10}, // Celeste y Blanca
-//         {4, 2, 10},   // Verde
-//         {125, 3, 10}, // Unión por Todos y Para Todos
-//         {3, 4, 10},   // Frente para la Victoria
-//     };
-//     fwrite(v, sizeof(Voto), sizeof(v)/sizeof(Voto), arch);
-//     fclose(arch);
-// }
+// Al finalizar el proceso no debe quedar nada en memoria.
 
-
-
-void printVoto(const void *v){
-    Voto *voto = (Voto *)v;
-    printf("|Agrupacion: %d|", voto->nagrup);
-    printf("Region: %d|", voto->region);
-    printf("Distrito: %d|\n", voto->distri);
-    puts("----------------------------");
+void generarArch(){
+    FILE *arch = fopen("../archTests/lote.dat", "wb");
+    if(!arch){
+        puts("Error al abrir el archivo");
+        return;
+    }
+    Lote v[] = {
+        {1, "Yerba Buena", 500.0, 5000},
+        {3, "Tafi Viejo", 300.0, 3000},
+        {5, "Banda del Rio Sali", 200.0, 2000},
+        {12, "Aguilares", 100.0, 1000},
+        {12, "Famailla", 50.0, 500},
+        {12, "Lules", 30.0, 300},
+        {21, "Monteros", 20.0, 200},
+        {6, "Rafaela", 156.6, 110709},
+        {6, "Sunchales", 100.0, 10000},
+        {6, "Esperanza", 50.0, 5000},
+        {12, "San Miguel de Tucuman", 1000.0, 10000},
+        {6, "San Cristobal", 30.0, 3000},
+        {6, "San Guillermo", 20.0, 2000},
+        {6, "San Vicente", 10.0, 1000},
+        {6, "San Justo", 5.0, 500},
+        {6, "San Javier", 3.0, 300}       
+    };
+    fwrite(v, sizeof(Lote), sizeof(v)/sizeof(Lote), arch);
+    fclose(arch);
 }
 
-void printAgrupacion(const void *a){
-    Agrupacion *agr = (Agrupacion *)a;
-    printf("|Numero: %d|", agr->numero);
-    printf("Nombre: %s|\n", agr->nombre);
-    puts("----------------------------");
+void printLote(const void *l){
+    Lote *lote = (Lote *)l;
+    printf("|Provincia: %d|Localidad: %s|Superficie: %.2f|Poblacion: %d|\n", lote->numProv, lote->loc, lote->sup, lote->pob);
 }
 
-void printResultado(const void *r){
-    Resultado *res = (Resultado *)r;
-    printf("|Agrupacion: %s|", res->nagrup);
-    printf("Distrito: %d|", res->distri);
-    printf("Votos Distrito: %d|", res->votosD);
-    printf("Total Votos: %d|\n", res->totalVotos);
-    puts("----------------------------");
+int cmpSup(const void *a, const void *b){
+    Lote *l1 = (Lote *)a;
+    Lote *l2 = (Lote *)b;
+    if(l1->sup > l2->sup)
+        return -1;
+    if(l1->sup < l2->sup)
+        return 1;
+    return 0;
 }
-
 int main(){
-    //generarArch();
-    int cantAgrup = 0, pos, top = 0;
-    int totalVotosAgrup[MAX_AGRUP] = {0};
-    Agrupacion agrupaciones[MAX_AGRUP];
-    Resultado auxRes;
-    tLista podioAgrup;
-    crearLista(&podioAgrup);
-    int votosDistritos[MAX_AGRUP][MAX_DISTRI] = {0};
-    if(!(cantAgrup = leerAgrup(agrupaciones))){
-        puts("Error al leer las agrupaciones");
+    generarArch();
+    int top = 0;
+    // mostrarArchivoGen("../archTests/lote.dat", sizeof(Lote), printLote);
+    tLista lista, top5;
+    crearLista(&lista);
+    crearLista(&top5);
+    if(cargarEnListaArch("../archTests/lote.dat", &lista, sizeof(Lote))!=1){
+        puts("Error al cargar el archivo");
         return 1;
     }
-    qsort(agrupaciones, cantAgrup, sizeof(Agrupacion), cmpAgru);
-    leerVotos(votosDistritos, agrupaciones, cantAgrup);
-    for(int i = 0; i < cantAgrup; i++){
-        for(int j = 0; j < MAX_DISTRI; j++){
-            totalVotosAgrup[i] += votosDistritos[i][j];
-        }
+    puts("Lista:");
+    map(&lista, imprimirLista, printLote);
+    puts("Top 5:");
+    for(tNodo *i = lista; i; i = i->sig) {
+        insertarTop5V2(&top5, &top, i->info, i->tamInfo, cmpSup);
     }
-    //podioAux apunta al principio de la lista, voy a usar el puntero para moverme por el top
-    tLista *podioAux = &podioAgrup;
-    for(int j = 0; j < MAX_DISTRI; j++){
-        top = 0;
-        for(int i = 0; i < cantAgrup; i++){
-            auxRes.distri = j + 1;
-            auxRes.votosD = votosDistritos[i][j];
-            strcpy(auxRes.nagrup, agrupaciones[i].nombre);
-            auxRes.totalVotos = totalVotosAgrup[i];
-            if(auxRes.votosD > 0)
-                insertarEnPodioU(podioAux, &auxRes, sizeof(Resultado), cmpRes, &top);
-        }
-        while(*podioAux){
-            podioAux = &(*podioAux)->sig;
-        }
+    map(&top5, imprimirLista, printLote);
 
-    }
-
-    puts("Podios por distrito:");
-    mostrarPodioDist(&podioAgrup, cmpRes, printResultado);
-    vaciarLista(&podioAgrup);
-    
+    vaciarLista(&lista);
+    vaciarLista(&top5);    
     return 0;
 }

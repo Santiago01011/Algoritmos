@@ -1,0 +1,12 @@
+|Patente: ST890UV|Nro Cuota: 10|Titular: Mouche Pablo|DNI: 12122012|Vto: 2/11/2024|Importe: 10000.00|
+|Patente: UV123WX|Nro Cuota: 11|Titular: Palermo Juan Martin|DNI: 26062011|Vto: 3/12/2023|Importe: 11000.00|
+|Patente: AB123CD|Nro Cuota: 1|Titular: Perez Juan|DNI: 40123456|Vto: 23/11/2023|Importe: 1000.00|
+|Patente: CD456EF|Nro Cuota: 2|Titular: Gomez Maria|DNI: 41234567|Vto: 24/11/2023|Importe: 2000.00|
+|Patente: EF789GH|Nro Cuota: 3|Titular: Gonzalez Pedro|DNI: 42345678|Vto: 25/11/2023|Importe: 3000.00|
+|Patente: GH012IJ|Nro Cuota: 4|Titular: Rodriguez Ana|DNI: 43456789|Vto: 26/11/2023|Importe: 4000.00|
+|Patente: QR567ST|Nro Cuota: 9|Titular: Fernandez Pablo|DNI: 44525943|Vto: 1/11/2023|Importe: 3000.00|
+|Patente: MN901OP|Nro Cuota: 7|Titular: Manez Adeline|DNI: 45678901|Vto: 29/11/2023|Importe: 1000.00|
+|Patente: KL678MN|Nro Cuota: 6|Titular: Lopez Maria|DNI: 46789012|Vto: 28/11/2023|Importe: 6000.00|
+|Patente: WX456YZ|Nro Cuota: 12|Titular: Jesus Maria|DNI: 49012345|Vto: 4/12/2023|Importe: 6000.00|
+|Patente: OP234QR|Nro Cuota: 8|Titular: Aramburu José|DNI: 49123456|Vto: 30/11/2023|Importe: 2000.00|
+|Patente: IJ345KL|Nro Cuota: 5|Titular: Fernandez Juan|DNI: 49234567|Vto: 27/11/2023|Importe: 5000.00|

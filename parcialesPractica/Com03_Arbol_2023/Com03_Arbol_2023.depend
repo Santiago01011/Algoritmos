@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1731303968 source:c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\tda\tdaarbol\arbol.c
+	"Arbol.h"
+
+1731294436 c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\tda\tdaarbol\arbol.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1731298868 source:c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\com03_arbol_2023\main.c
+	"main.h"
+
+1731296871 c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\com03_arbol_2023\main.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"../../TDA/TDAArbol/Arbol.h"
+
+1731303064 source:c:\users\santi\onedrive - universidad nacional de la matanza\escritorio\algoritmos\parcialespractica\com03_arbol_2023\source.c
+	"main.h"
+

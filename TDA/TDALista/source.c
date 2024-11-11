@@ -3,10 +3,11 @@
 int cmpInt(const void *a, const void *b){
     return *(int *)a - *(int *)b;
 }
-
+//algo
 int cmpIntDesc(const void *a, const void *b){
     return *(int *)b - *(int *)a;
 }
+
 /**
  * @brief Imprime un dato de la lista.
  * 
@@ -40,17 +41,53 @@ void mapTop10(void *dato, void *contexto) {
     int *cantTop = ((int **)contexto)[1];
     Cmp cmp = ((Cmp *)contexto)[2];
     unsigned *tam = ((unsigned **)contexto)[3];
-    insertarTop10(top, cantTop, dato, *tam, cmp);
+    insertarTop5(top, cantTop, dato, *tam, cmp);
 }
-int insertarTop10(tLista *top, int *cantTop, const void *dato, unsigned tam, Cmp cmp){
+int insertarTop5(tLista *top, int *cantTop, const void *dato, unsigned tam, Cmp cmp){
     tNodo *nue;
-    if(*cantTop < 10){
+    if(*cantTop < 5){
         ponerEnOrden(top, dato, tam, cmp);
         (*cantTop)++;
         return 1;
     }
     ponerEnOrden(top, dato, tam, cmp);
     sacarUltimoLista(top, NULL, 0);
+    return 1;
+}
+
+int insertarTop5V2(tLista *top, int *cantTop, const void *dato, unsigned tam, Cmp cmp){
+    tNodo *nue;
+    if(*cantTop < 5){
+        while(*top && cmp((*top)->info, dato) < 0)
+        top = &(*top)->sig;
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL || (nue->info = malloc(tam)) == NULL){
+        free(nue);
+        return 0;
+    }
+    memcpy(nue->info, dato, tam);
+    nue->tamInfo = tam;
+    nue->sig = *top;
+    *top = nue;
+    (*cantTop)++;
+    return 1;
+    }
+    while(*top && cmp((*top)->info, dato) < 0)
+        top = &(*top)->sig;
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL || (nue->info = malloc(tam)) == NULL){
+        free(nue);
+        return 0;
+    }
+    memcpy(nue->info, dato, tam);
+    nue->tamInfo = tam;
+    nue->sig = *top;
+    *top = nue;
+    while(*top && (*top)->sig)
+        top = &(*top)->sig;
+    if(*top == NULL)
+        return 0;
+    free((*top)->info);
+    free(*top);
+    *top = NULL;    
     return 1;
 }
 
@@ -137,38 +174,38 @@ void mostrarPodio(tLista *podio, Cmp cmp, print_callback printStruct){
     }
 }
 
-void mostrarPodioDist(tLista *podio, Cmp cmp, print_callback printStruct){
-    int top, dist;
-    Resultado *aux;
-    while(*podio){
-        top = 1;
-        aux = (*podio)->info;
-        dist = aux->distri;
-        printf("Distrito %d\n", dist);
-        do{    
-            if(top == 1){
-                printf("1er: ");
-                printStruct((*podio)->info);
-                if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
-                    top++;
-                }
-            }else if(top == 2){
-                printf("2do: ");
-                printStruct((*podio)->info);
-                if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
-                    top++;
-                }
-            }else if(top == 3){
-                printf("3ro: ");
-                printStruct((*podio)->info);
-                if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
-                    top++;
-                }
-            }
-            podio = &(*podio)->sig;
-        }while(*podio && ((Resultado *)(*podio)->info)->distri == dist);
-    }
-}
+// void mostrarPodioDist(tLista *podio, Cmp cmp, print_callback printStruct){
+//     int top, dist;
+//     Resultado *aux;
+//     while(*podio){
+//         top = 1;
+//         aux = (*podio)->info;
+//         dist = aux->distri;
+//         printf("Distrito %d\n", dist);
+//         do{    
+//             if(top == 1){
+//                 printf("1er: ");
+//                 printStruct((*podio)->info);
+//                 if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
+//                     top++;
+//                 }
+//             }else if(top == 2){
+//                 printf("2do: ");
+//                 printStruct((*podio)->info);
+//                 if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
+//                     top++;
+//                 }
+//             }else if(top == 3){
+//                 printf("3ro: ");
+//                 printStruct((*podio)->info);
+//                 if((*podio)->sig && cmp((*podio)->info, (*podio)->sig->info) != 0){
+//                     top++;
+//                 }
+//             }
+//             podio = &(*podio)->sig;
+//         }while(*podio && ((Resultado *)(*podio)->info)->distri == dist);
+//     }
+// }
 //podio juli
 
 int insertar_en_podio(tLista* pl, void* dato, size_t tam, Cmp cmp)
@@ -278,9 +315,10 @@ int mostrarArchivoGen(const char* nombreArch, size_t tamElem, print_callback pri
  * @param nombreArch Puntero a la ruta del archivo que se va a cargar.
  * @param lista Puntero a la lista donde se va a cargar el archivo.
  * @param tamElem Tamaño de los elementos del archivo.
+ * @param cmp Puntero a función de comparación.
  * @return int Devuelve 1 si pudo cargar el archivo, 0 en caso contrario.
  */
-int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem){
+int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem, Cmp cmp){
     FILE* arch;
     void* elem;
     if (!(arch = fopen(nombreArch, "rb")))
@@ -290,7 +328,8 @@ int cargarEnListaArch(const char* nombreArch, tLista *lista, size_t tamElem){
         fclose(arch);
     }
     while(fread(elem, tamElem, 1, arch) == 1)
-        ponerAlFinal(lista, elem, tamElem);
+        ponerEnOrden(lista, elem, tamElem, cmp);
+    free(elem);
     fclose(arch);
     return 1;
 }
@@ -324,77 +363,6 @@ int txtABin_ALU(const char* nombreArchTxt, const char* nombreBin, size_t tamElem
     fclose(archBin);
     free(elem);
     return 1;
-}
-
-int convertirRegla(const char* linea, void* elem){
-    Agrupacion* aux = (Agrupacion*)elem;
-    if(sscanf(linea, "%d%25[^\n]", &aux->numero, aux->nombre) == 2)
-        return 1;
-    return 0;
-}
-
-int cmpAgru(const void *a, const void *b){
-    Agrupacion *agr1 = (Agrupacion *)a;
-    Agrupacion *agr2 = (Agrupacion *)b;
-    return agr1->numero - agr2->numero;
-}
-
-int cmpAgruNombre(const void *a, const void *b){
-    Agrupacion *agr1 = (Agrupacion *)a;
-    Agrupacion *agr2 = (Agrupacion *)b;
-    return strcmp(agr1->nombre, agr2->nombre);
-}
-
-int cmpRes(const void *a, const void *b){
-    return ((Resultado *)b)->votosD - ((Resultado *)a)->votosD;
-}
-
-int leerAgrup(Agrupacion vec[]){
-    int i = 0;
-    char linea[100];
-    void * elem;
-    FILE* arch = fopen("../archTests/agrupaciones.txt", "r");
-    if(!arch){
-        puts("Error al abrir el archivo");
-        return 0;
-    }
-    while(fgets(linea, 100, arch)){
-        if(convertirRegla(linea, &vec[i]) == 1)
-            i++;
-    }
-    fclose(arch);
-    return i;
-}
-
-void leerVotos(int votosDistritos[MAX_AGRUP][MAX_DISTRI], Agrupacion vec[], int cantAgrup) {
-    Voto aux;
-    FILE *arch = fopen("../archTests/votos.dat", "rb");
-    if (!arch) {
-        puts("Error al abrir el archivo");
-        return;
-    }
-
-    while (fread(&aux, sizeof(Voto), 1, arch) == 1) {
-        int pos;
-        if (buscarBin(vec, &aux, cmpAgru, &pos, cantAgrup, sizeof(Agrupacion)) == 1) {
-            votosDistritos[pos][aux.distri - 1]++;
-        }
-    }
-
-    fclose(arch);
-
-    printf("      ");
-    for(int i=0; i< MAX_DISTRI; i++){
-        printf("%3d ", i+1);
-    }
-    puts("");
-    for(int i = 0; i < cantAgrup; i++){
-        printf("%4d: ", vec[i].numero);
-        for(int j = 0; j < MAX_DISTRI; j++){
-            printf("%3d ", votosDistritos[i][j]);
-        }
-        puts("");
-    }
 }
 
 int buscarBin(const void* v, const void* elem, Cmp cmp, int *pos, int ce, size_t tam){
